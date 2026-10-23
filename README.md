@@ -2,6 +2,8 @@
 
 Box layouts for **MOSS-Image** in ComfyUI. Draw boxes on a canvas and write in each box what must be there.
 
+<img src="images/canvas_node.png" alt="Artfat BBox Canvas: boxes drawn over a photo, each with what must be inside" width="420">
+
 - **Generate**: a new frame where every box holds what you wrote — a sign with exact words, an object, a character.
 - **Edit**: redraw only the boxes of an existing picture. Everything outside the boxes stays pixel-identical, and the soft edge leaves no seam.
 
