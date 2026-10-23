@@ -230,6 +230,10 @@ class ArtfatBBoxSampler(io.ComfyNode):
         if editing:
             image = image[:, :, :, :3]
             height, width = image.shape[1], image.shape[2]
+            if mask is not None and float(mask.max()) <= 0.0:
+                # No boxes drawn yet: nothing to redraw, the picture goes through as it is (fast).
+                ArtfatEditSource.remember(image)
+                return io.NodeOutput(image, {"samples": vae.encode(image)}, prompt or "")
         text = _layout_prompt(prompt or "", layout, width, height)
         pos = positive if positive is not None else _encode(clip, text)
         neg = negative if negative is not None else _encode(clip, "")
@@ -260,6 +264,7 @@ class ArtfatBBoxSampler(io.ComfyNode):
             alpha = mask.movedim(1, -1).to(decoded.device)  # [B,H,W,1]; pixels outside the mask stay the original ones
             decoded = image.to(decoded.device) * (1.0 - alpha) + decoded * alpha
         out.pop("noise_mask", None)
+        ArtfatEditSource.remember(decoded)
         return io.NodeOutput(decoded, out, text)
 
 
@@ -311,6 +316,51 @@ class ArtfatBBoxesToMask:
         return (torch.stack(masks),)
 
 
+class ArtfatEditSource(io.ComfyNode):
+    """The picture for the canvas: your own photo, or the last frame the BBox Sampler drew.
+    A wire from the sampler back into the canvas would be a loop, so the sampler stores its
+    result here and this node hands it to the canvas on the next run."""
+
+    _last = None   # last frame from any Artfat BBox Sampler (CPU); lives until ComfyUI restarts
+    _count = 0
+
+    @classmethod
+    def remember(cls, image):
+        cls._last = image.detach().cpu().clone()
+        cls._count += 1
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ArtfatEditSource",
+            display_name="Artfat Edit Source",
+            category="artfat",
+            description="Wire into the canvas `image`. edit last result OFF: passes your photo (or nothing = generate a new frame). "
+                        "ON: the frame the BBox Sampler drew last comes back into the canvas - draw boxes on it and run to edit it.",
+            inputs=[
+                io.Image.Input("image", optional=True, tooltip="Your own photo (Load Image). Leave empty to generate."),
+                io.Boolean.Input("edit_last_result", default=False, label_on="edit last result", label_off="photo / generate",
+                                 tooltip="ON = edit the frame the BBox Sampler drew last. Every run then edits the newest result."),
+            ],
+            outputs=[io.Image.Output(display_name="image")],
+            is_output_node=True,
+        )
+
+    @classmethod
+    def fingerprint_inputs(cls, edit_last_result=False, image=None):
+        return cls._count if edit_last_result else None
+
+    @classmethod
+    def execute(cls, edit_last_result=False, image=None) -> io.NodeOutput:
+        out = cls._last if edit_last_result else image
+        if edit_last_result and out is None:
+            raise ValueError("Artfat Edit Source: nothing generated yet. Turn `edit last result` off and run once.")
+        if out is None:
+            return io.NodeOutput(None)
+        preview = nodes.PreviewImage().save_images(out[:1], "artfat.edit_source")["ui"]
+        return io.NodeOutput(out, ui=preview)
+
+
 class ArtfatFrameHold(io.ComfyNode):
     """Keeps the last frame so you can draw boxes on it and edit it without generating it again.
     The input is lazy: while `hold` is on and a frame is stored, ComfyUI never evaluates the
@@ -355,6 +405,8 @@ class ArtfatFrameHold(io.ComfyNode):
 
 
 NODE_CLASS_MAPPINGS = {"ArtfatBBoxCanvas": ArtfatBBoxCanvas, "ArtfatBBoxSampler": ArtfatBBoxSampler,
-                       "ArtfatBBoxesToMask": ArtfatBBoxesToMask, "ArtfatFrameHold": ArtfatFrameHold}
+                       "ArtfatBBoxesToMask": ArtfatBBoxesToMask, "ArtfatFrameHold": ArtfatFrameHold,
+                       "ArtfatEditSource": ArtfatEditSource}
 NODE_DISPLAY_NAME_MAPPINGS = {"ArtfatBBoxCanvas": "Artfat BBox Canvas", "ArtfatBBoxSampler": "Artfat BBox Sampler",
-                              "ArtfatBBoxesToMask": "Artfat BBoxes to Mask", "ArtfatFrameHold": "Artfat Frame Hold"}
+                              "ArtfatBBoxesToMask": "Artfat BBoxes to Mask", "ArtfatFrameHold": "Artfat Frame Hold",
+                              "ArtfatEditSource": "Artfat Edit Source"}

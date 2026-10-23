@@ -109,6 +109,9 @@ Builds the MOSS layout prompt from your prompt + the boxes, samples and, in edit
 | `LATENT` | The sampled latent, for a second pass. |
 | `layout_prompt` | The exact text the model received (layout JSON). |
 
+### Artfat Edit Source
+Put it in front of the canvas `image` input, with your Load Image wired into it. `edit last result` OFF: your photo goes to the canvas (Load Image bypassed = generate a new frame). ON: the frame the BBox Sampler drew last comes back into the canvas, so you can box and edit what you just generated. See *Edit what you just generated* below.
+
 ### Artfat Frame Hold
 `hold` OFF: passes the generated frame through and remembers it. `hold` ON: returns the remembered frame and skips the generation. See *Generate, then edit the same frame* below.
 
@@ -130,6 +133,16 @@ Pixel boxes (`bboxes`) → a mask with a soft edge (`feather`). For your own edi
 Use the canvas `layout` with the core **MOSS-Image Layout Prompt** → **CLIP Text Encode** → **MOSS-Image Color/Depth Control**, and connect the result to the sampler's `positive`. The sampler then uses your conditioning as it is.
 
 Depth wins over boxes where they disagree. Lettering in the depth source shows up in the depth map as relief, so a text box over that area renders the old letters, not yours. Keep text boxes where the depth source has no lettering, or lower the control `strength` / `end_percent`.
+
+## Edit what you just generated (Artfat Edit Source)
+
+A wire from the sampler back into the canvas would be a loop, so the BBox Sampler remembers every frame it draws and **Artfat Edit Source** hands it back to the canvas.
+
+1. `edit last result` OFF, Load Image bypassed: generate as usual.
+2. Switch `edit last result` ON and run once with no boxes - the picture goes through untouched (about a second) and shows under the canvas.
+3. Draw boxes over what to change and run. Only the boxes are redrawn; every next run edits the newest result.
+
+With the Artfat LLM Prompter use the task preset **User prompt -> edit**: it keeps your own prompt word for word and changes only what the boxes list (no boxes = the prompt is passed on and the LLM is not called). A prompt that still names the old object pulls it back into the box.
 
 ## Generate, then edit the same frame (Artfat Frame Hold)
 

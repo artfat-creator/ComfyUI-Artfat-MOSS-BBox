@@ -1,7 +1,7 @@
 [project]
 name = "comfyui-artfat-moss-bbox"
 description = "Box layouts for MOSS-Image: draw boxes on a canvas to generate a frame where every box holds what you wrote, or to edit only the boxes of an existing picture (outside the boxes stays pixel-identical). Canvas + Sampler, built to sit around an LLM prompter."
-version = "1.1.0"
+version = "1.2.0"
 license = { file = "LICENSE" }
 readme = "README.md"
 requires-python = ">=3.9"
