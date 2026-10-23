@@ -311,7 +311,50 @@ class ArtfatBBoxesToMask:
         return (torch.stack(masks),)
 
 
+class ArtfatFrameHold(io.ComfyNode):
+    """Keeps the last frame so you can draw boxes on it and edit it without generating it again.
+    The input is lazy: while `hold` is on and a frame is stored, ComfyUI never evaluates the
+    generation behind it -- as long as nothing else in the graph asks for that generation."""
+
+    _frames = {}  # node id -> last frame (CPU); lives until ComfyUI restarts
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ArtfatFrameHold",
+            display_name="Artfat Frame Hold",
+            category="artfat",
+            description="hold OFF: passes the generated frame through and remembers it. hold ON: returns the remembered frame "
+                        "and the generation is skipped. Route EVERY use of the generated frame (save, upscale, edit) through this node, "
+                        "otherwise those other links still trigger a new generation.",
+            inputs=[
+                io.Image.Input("image", optional=True, lazy=True, tooltip="The generated frame (VAE Decode)."),
+                io.Boolean.Input("hold", default=False, label_on="hold frame", label_off="pass through",
+                                 tooltip="ON = keep the last frame and skip the generation (draw boxes on it, edit it). "
+                                         "OFF = generate as usual."),
+            ],
+            outputs=[io.Image.Output(display_name="image")],
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def check_lazy_status(cls, hold, image=None):
+        if hold and cls.hidden.unique_id in cls._frames:
+            return []
+        return ["image"]
+
+    @classmethod
+    def execute(cls, hold, image=None) -> io.NodeOutput:
+        key = cls.hidden.unique_id
+        if hold and key in cls._frames:
+            return io.NodeOutput(cls._frames[key])
+        if image is None:
+            raise ValueError("Artfat Frame Hold: no frame yet. Turn `hold` off and run once to generate one.")
+        cls._frames[key] = image.detach().cpu().clone()
+        return io.NodeOutput(image)
+
+
 NODE_CLASS_MAPPINGS = {"ArtfatBBoxCanvas": ArtfatBBoxCanvas, "ArtfatBBoxSampler": ArtfatBBoxSampler,
-                       "ArtfatBBoxesToMask": ArtfatBBoxesToMask}
+                       "ArtfatBBoxesToMask": ArtfatBBoxesToMask, "ArtfatFrameHold": ArtfatFrameHold}
 NODE_DISPLAY_NAME_MAPPINGS = {"ArtfatBBoxCanvas": "Artfat BBox Canvas", "ArtfatBBoxSampler": "Artfat BBox Sampler",
-                              "ArtfatBBoxesToMask": "Artfat BBoxes to Mask"}
+                              "ArtfatBBoxesToMask": "Artfat BBoxes to Mask", "ArtfatFrameHold": "Artfat Frame Hold"}

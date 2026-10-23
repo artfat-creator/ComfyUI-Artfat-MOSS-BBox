@@ -5,7 +5,7 @@ Box layouts for **MOSS-Image** in ComfyUI. Draw boxes on a canvas and write in e
 - **Generate**: a new frame where every box holds what you wrote — a sign with exact words, an object, a character.
 - **Edit**: redraw only the boxes of an existing picture. Everything outside the boxes stays pixel-identical, and the soft edge leaves no seam.
 
-Two nodes do the work, so an LLM prompter can sit between them:
+Two nodes do the work, so an LLM prompter can sit between them (plus **Frame Hold** to edit a frame you have just generated):
 
 ```
 Artfat BBox Canvas ──brief──► LLM prompter ──prompt──► Artfat BBox Sampler ──► image
@@ -109,6 +109,9 @@ Builds the MOSS layout prompt from your prompt + the boxes, samples and, in edit
 | `LATENT` | The sampled latent, for a second pass. |
 | `layout_prompt` | The exact text the model received (layout JSON). |
 
+### Artfat Frame Hold
+`hold` OFF: passes the generated frame through and remembers it. `hold` ON: returns the remembered frame and skips the generation. See *Generate, then edit the same frame* below.
+
 ### Artfat BBoxes to Mask
 Pixel boxes (`bboxes`) → a mask with a soft edge (`feather`). For your own edit graphs built from core nodes.
 
@@ -127,6 +130,16 @@ Pixel boxes (`bboxes`) → a mask with a soft edge (`feather`). For your own edi
 Use the canvas `layout` with the core **MOSS-Image Layout Prompt** → **CLIP Text Encode** → **MOSS-Image Color/Depth Control**, and connect the result to the sampler's `positive`. The sampler then uses your conditioning as it is.
 
 Depth wins over boxes where they disagree. Lettering in the depth source shows up in the depth map as relief, so a text box over that area renders the old letters, not yours. Keep text boxes where the depth source has no lettering, or lower the control `strength` / `end_percent`.
+
+## Generate, then edit the same frame (Artfat Frame Hold)
+
+To draw boxes on a frame you have just generated, put **Artfat Frame Hold** right after the VAE Decode of your generation and route every use of that frame through it (preview/save, the canvas `image`, the upscale).
+
+1. `hold` OFF, run: the frame is generated and remembered.
+2. Draw the boxes on it (it shows under the canvas), switch `hold` ON, run: the remembered frame is used and the generation is skipped, even with a random seed. Only the boxes are redrawn.
+3. Switch `hold` OFF for a new frame.
+
+The input is lazy: while `hold` is on, ComfyUI does not run the sampler behind it, unless another node in the graph still takes the generation directly. The remembered frame lives in memory until ComfyUI restarts.
 
 ## License
 
