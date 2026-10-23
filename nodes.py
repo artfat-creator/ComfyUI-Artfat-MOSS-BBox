@@ -114,6 +114,13 @@ class ArtfatBBoxCanvas(io.ComfyNode):
                 io.Int.Input("grow", default=16, min=0, max=512, tooltip="Edit: the redrawn area reaches this many px past each box."),
                 io.Int.Input("feather", default=64, min=0, max=1024,
                              tooltip="Edit: soft edge in px past the grown box. 0 = hard edge, a visible seam."),
+                # Sockets only: the core canvas hides width/height whenever `background` is wired, so a
+                # resolution node (Artfat Resolution) comes in here. Added last to keep saved widget order.
+                io.Int.Input("res_width", display_name="res width", optional=True, force_input=True, min=64, max=16384,
+                             tooltip="Optional, from Artfat Resolution. Generate: the frame width. Edit: with res height "
+                                     "it sets the size (width x height pixels), the picture keeps its own proportions."),
+                io.Int.Input("res_height", display_name="res height", optional=True, force_input=True, min=64, max=16384,
+                             tooltip="Optional, from Artfat Resolution. Generate: the frame height. Edit: see res width."),
             ],
             outputs=[
                 io.Image.Output(display_name="image"),
@@ -131,16 +138,27 @@ class ArtfatBBoxCanvas(io.ComfyNode):
 
     @classmethod
     def execute(cls, width, height, editor_state=None, last_incoming=None, background=None, bboxes=None,
-                brief="", character_boxes="", megapixels=2.0, grow=16, feather=64) -> io.NodeOutput:
+                brief="", character_boxes="", megapixels=2.0, grow=16, feather=64,
+                res_width=None, res_height=None) -> io.NodeOutput:
         # Same source rule as core Create Bounding Boxes: a new upstream value wins once, canvas edits after that.
+        # Boxes are in canvas pixels (width x height), so the fractions come from the canvas size.
         incoming = cbb.boxes_from_input(bboxes, width, height)
         applied = last_incoming if isinstance(last_incoming, list) else []
         source = incoming if (incoming and incoming != applied) else (editor_state or [])
         regions = cbb.boxes_to_regions(source, width, height)  # fractions of the canvas
 
+        # res width/height wired: generate = exactly that frame; edit = that many pixels, picture's proportions.
+        sized = bool(res_width and res_height)
         editing = background is not None and len(background) > 0
+        if editing and sized:
+            megapixels = res_width * res_height / (1024 * 1024)
         image = _scale_to_megapixels(background[:1, :, :, :3], megapixels) if editing else None
-        W, H = (image.shape[2], image.shape[1]) if editing else (width, height)
+        if editing:
+            W, H = image.shape[2], image.shape[1]
+        elif sized:
+            W, H = (max(16, round(v / 16) * 16) for v in (res_width, res_height))
+        else:
+            W, H = width, height
 
         characters = {int(i) for i in re.findall(r"\d+", character_boxes or "")}
         layout = cbb.build_elements(regions)
@@ -151,7 +169,7 @@ class ArtfatBBoxCanvas(io.ComfyNode):
         text = "\n\n".join(t for t in ((brief or "").strip(), _boxes_text(regions, characters, editing)) if t)
         preview = cbb.render_preview(regions, W, H, cbb._bg_from_image(image))
 
-        ui = {"dims": [width, height]}
+        ui = {"dims": [W, H]}  # artfat_bbox.js copies these into the hidden width/height so the canvas shape follows
         if incoming:
             ui["input_bboxes"] = incoming
         if editing:
