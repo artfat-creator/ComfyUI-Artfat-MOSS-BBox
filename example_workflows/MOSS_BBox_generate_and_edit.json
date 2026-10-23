@@ -1,0 +1,1995 @@
+{
+ "id": "ecf449a0-51e2-41be-8650-47a19fa8bb2f",
+ "revision": 0,
+ "last_node_id": 15,
+ "last_link_id": 19,
+ "nodes": [
+  {
+   "id": 4,
+   "type": "UNETLoader",
+   "pos": [
+    0,
+    0
+   ],
+   "size": [
+    270,
+    82
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "название_unet",
+     "name": "unet_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "unet_name"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "тип_данных_веса",
+     "name": "weight_dtype",
+     "type": "COMBO",
+     "widget": {
+      "name": "weight_dtype"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "МОДЕЛЬ",
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      1
+     ]
+    }
+   ],
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.41.0",
+    "Node name for S&R": "UNETLoader"
+   },
+   "widgets_values": [
+    "moss-image-sft.safetensors",
+    "default"
+   ],
+   "widgets_values_named": {
+    "unet_name": "moss-image-sft.safetensors",
+    "weight_dtype": "default"
+   }
+  },
+  {
+   "id": 5,
+   "type": "CLIPLoader",
+   "pos": [
+    0,
+    130
+   ],
+   "size": [
+    270,
+    106
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "название_clip",
+     "name": "clip_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "clip_name"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "тип",
+     "name": "type",
+     "type": "COMBO",
+     "widget": {
+      "name": "type"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "устройство",
+     "name": "device",
+     "shape": 7,
+     "type": "COMBO",
+     "widget": {
+      "name": "device"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "CLIP",
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      2
+     ]
+    }
+   ],
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.41.0",
+    "Node name for S&R": "CLIPLoader"
+   },
+   "widgets_values": [
+    "moss_image_text_encoder.safetensors",
+    "moss_image",
+    "default"
+   ],
+   "widgets_values_named": {
+    "clip_name": "moss_image_text_encoder.safetensors",
+    "type": "moss_image",
+    "device": "default"
+   }
+  },
+  {
+   "id": 6,
+   "type": "VAELoader",
+   "pos": [
+    0,
+    270
+   ],
+   "size": [
+    270,
+    58
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "название_vae",
+     "name": "vae_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "vae_name"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "VAE",
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      10
+     ]
+    }
+   ],
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.41.0",
+    "Node name for S&R": "VAELoader"
+   },
+   "widgets_values": [
+    "flux2-vae.safetensors"
+   ],
+   "widgets_values_named": {
+    "vae_name": "flux2-vae.safetensors"
+   }
+  },
+  {
+   "id": 7,
+   "type": "LoraLoader",
+   "pos": [
+    0,
+    370
+   ],
+   "size": [
+    270,
+    126
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "модель",
+     "name": "model",
+     "type": "MODEL",
+     "link": 1
+    },
+    {
+     "localized_name": "клип",
+     "name": "clip",
+     "type": "CLIP",
+     "link": 2
+    },
+    {
+     "localized_name": "название_lora",
+     "name": "lora_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "lora_name"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "сила_модели",
+     "name": "strength_model",
+     "type": "FLOAT",
+     "widget": {
+      "name": "strength_model"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "сила_клипа",
+     "name": "strength_clip",
+     "type": "FLOAT",
+     "widget": {
+      "name": "strength_clip"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "МОДЕЛЬ",
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      3
+     ]
+    },
+    {
+     "localized_name": "CLIP",
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      4
+     ]
+    }
+   ],
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.41.0",
+    "Node name for S&R": "LoraLoader"
+   },
+   "widgets_values": [
+    "cndamiph_Candid_Amateur_iPhone_MOSS_v1.safetensors",
+    0.7,
+    0.7
+   ],
+   "widgets_values_named": {
+    "lora_name": "cndamiph_Candid_Amateur_iPhone_MOSS_v1.safetensors",
+    "strength_model": 0.7,
+    "strength_clip": 0.7
+   }
+  },
+  {
+   "id": 8,
+   "type": "LoraLoader",
+   "pos": [
+    0,
+    590
+   ],
+   "size": [
+    270,
+    126
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "модель",
+     "name": "model",
+     "type": "MODEL",
+     "link": 3
+    },
+    {
+     "localized_name": "клип",
+     "name": "clip",
+     "type": "CLIP",
+     "link": 4
+    },
+    {
+     "localized_name": "название_lora",
+     "name": "lora_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "lora_name"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "сила_модели",
+     "name": "strength_model",
+     "type": "FLOAT",
+     "widget": {
+      "name": "strength_model"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "сила_клипа",
+     "name": "strength_clip",
+     "type": "FLOAT",
+     "widget": {
+      "name": "strength_clip"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "МОДЕЛЬ",
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      8
+     ]
+    },
+    {
+     "localized_name": "CLIP",
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      9
+     ]
+    }
+   ],
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.41.0",
+    "Node name for S&R": "LoraLoader"
+   },
+   "widgets_values": [
+    "MOSS_Image_SFT_8_steps_dmd_v0.1.safetensors",
+    0.8,
+    0.8
+   ],
+   "widgets_values_named": {
+    "lora_name": "MOSS_Image_SFT_8_steps_dmd_v0.1.safetensors",
+    "strength_model": 0.8,
+    "strength_clip": 0.8
+   }
+  },
+  {
+   "id": 9,
+   "type": "LoadImage",
+   "pos": [
+    0,
+    820
+   ],
+   "size": [
+    401.370703125,
+    102
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 4,
+   "inputs": [
+    {
+     "localized_name": "изображение",
+     "name": "image",
+     "type": "COMBO",
+     "widget": {
+      "name": "image"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "выберите файл для загрузки",
+     "name": "upload",
+     "type": "IMAGEUPLOAD",
+     "widget": {
+      "name": "upload"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "ИЗОБРАЖЕНИЕ",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      19
+     ]
+    },
+    {
+     "localized_name": "МАСКА",
+     "name": "MASK",
+     "type": "MASK",
+     "links": null
+    }
+   ],
+   "title": "Picture to edit (Ctrl+B bypass = generate a new frame)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.41.0",
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "example.png",
+    "image"
+   ],
+   "widgets_values_named": {
+    "image": "example.png",
+    "upload": "image"
+   }
+  },
+  {
+   "id": 10,
+   "type": "ArtfatBBoxCanvas",
+   "pos": [
+    380,
+    0
+   ],
+   "size": [
+    460,
+    760
+   ],
+   "flags": {},
+   "order": 6,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "background",
+     "shape": 7,
+     "type": "IMAGE",
+     "link": 19
+    },
+    {
+     "localized_name": "bboxes",
+     "name": "bboxes",
+     "shape": 7,
+     "type": "BOUNDING_BOX,ARRAY,STRING",
+     "link": null
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "widget": {
+      "name": "width"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "widget": {
+      "name": "height"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "editor_state",
+     "name": "editor_state",
+     "type": "BOUNDING_BOXES",
+     "widget": {
+      "name": "editor_state"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "brief",
+     "name": "brief",
+     "type": "STRING",
+     "widget": {
+      "name": "brief"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "character_boxes",
+     "name": "character_boxes",
+     "type": "STRING",
+     "widget": {
+      "name": "character_boxes"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "megapixels",
+     "name": "megapixels",
+     "type": "FLOAT",
+     "widget": {
+      "name": "megapixels"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "grow",
+     "name": "grow",
+     "type": "INT",
+     "widget": {
+      "name": "grow"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "feather",
+     "name": "feather",
+     "type": "INT",
+     "widget": {
+      "name": "feather"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "last_incoming",
+     "name": "last_incoming",
+     "shape": 7,
+     "type": "BOUNDING_BOXES",
+     "widget": {
+      "name": "last_incoming"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "links": [
+      13
+     ]
+    },
+    {
+     "localized_name": "mask",
+     "name": "mask",
+     "type": "MASK",
+     "links": [
+      14
+     ]
+    },
+    {
+     "localized_name": "brief",
+     "name": "brief",
+     "type": "STRING",
+     "links": [
+      6
+     ]
+    },
+    {
+     "localized_name": "layout",
+     "name": "layout",
+     "type": "ARRAY",
+     "links": [
+      12
+     ]
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "links": [
+      15
+     ]
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "links": [
+      16
+     ]
+    },
+    {
+     "localized_name": "preview",
+     "name": "preview",
+     "type": "IMAGE",
+     "links": [
+      18
+     ]
+    },
+    {
+     "localized_name": "bboxes",
+     "name": "bboxes",
+     "type": "BOUNDING_BOX",
+     "links": null
+    }
+   ],
+   "title": "1. Draw boxes + write your idea (brief)",
+   "properties": {
+    "cnr_id": "comfyui_fearnworksnodes",
+    "ver": "0.1.2",
+    "Node name for S&R": "ArtfatBBoxCanvas"
+   },
+   "widgets_values": [
+    1152,
+    2048,
+    [
+     {
+      "x": 96,
+      "y": 160,
+      "width": 960,
+      "height": 300,
+      "metadata": {
+       "type": "text",
+       "text": "NOVA NOODLES",
+       "desc": "a glowing pink neon sign above a food stall",
+       "palette": []
+      }
+     },
+     {
+      "x": 620,
+      "y": 900,
+      "width": 460,
+      "height": 760,
+      "metadata": {
+       "type": "obj",
+       "text": "",
+       "desc": "a tall chrome robot cook with four arms stirring a steaming wok",
+       "palette": []
+      }
+     },
+     {
+      "x": 80,
+      "y": 1300,
+      "width": 420,
+      "height": 560,
+      "metadata": {
+       "type": "obj",
+       "text": "",
+       "desc": "a small orange cat in a clear raincoat sitting on a crate",
+       "palette": []
+      }
+     }
+    ],
+    "A rainy neon night street market in a futuristic megacity, shot on a phone at eye level, wet asphalt reflecting pink and teal signs, steam rising from food stalls.",
+    "",
+    2,
+    16,
+    64,
+    []
+   ],
+   "widgets_values_named": {
+    "width": 1152,
+    "height": 2048,
+    "editor_state": [
+     {
+      "x": 96,
+      "y": 160,
+      "width": 960,
+      "height": 300,
+      "metadata": {
+       "type": "text",
+       "text": "NOVA NOODLES",
+       "desc": "a glowing pink neon sign above a food stall",
+       "palette": []
+      }
+     },
+     {
+      "x": 620,
+      "y": 900,
+      "width": 460,
+      "height": 760,
+      "metadata": {
+       "type": "obj",
+       "text": "",
+       "desc": "a tall chrome robot cook with four arms stirring a steaming wok",
+       "palette": []
+      }
+     },
+     {
+      "x": 80,
+      "y": 1300,
+      "width": 420,
+      "height": 560,
+      "metadata": {
+       "type": "obj",
+       "text": "",
+       "desc": "a small orange cat in a clear raincoat sitting on a crate",
+       "palette": []
+      }
+     }
+    ],
+    "brief": "A rainy neon night street market in a futuristic megacity, shot on a phone at eye level, wet asphalt reflecting pink and teal signs, steam rising from food stalls.",
+    "character_boxes": "",
+    "megapixels": 2,
+    "grow": 16,
+    "feather": 64,
+    "last_incoming": []
+   }
+  },
+  {
+   "id": 11,
+   "type": "ArtfatLLMPrompterV2",
+   "pos": [
+    900,
+    0
+   ],
+   "size": [
+    460,
+    2000
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "label": "refs in",
+     "localized_name": "ref_in",
+     "name": "ref_in",
+     "shape": 7,
+     "type": "IMAGE",
+     "link": null
+    },
+    {
+     "label": "persona ref",
+     "localized_name": "reference_image",
+     "name": "reference_image",
+     "shape": 7,
+     "type": "IMAGE",
+     "link": null
+    },
+    {
+     "localized_name": "clip",
+     "name": "clip",
+     "shape": 7,
+     "type": "CLIP",
+     "link": null
+    },
+    {
+     "localized_name": "queue",
+     "name": "queue",
+     "shape": 7,
+     "type": "*",
+     "link": null
+    },
+    {
+     "localized_name": "latent",
+     "name": "latent",
+     "shape": 7,
+     "type": "LATENT",
+     "link": null
+    },
+    {
+     "localized_name": "model",
+     "name": "model",
+     "type": "COMBO",
+     "widget": {
+      "name": "model"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "mmproj",
+     "name": "mmproj",
+     "type": "COMBO",
+     "widget": {
+      "name": "mmproj"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "chat_handler",
+     "name": "chat_handler",
+     "type": "COMBO",
+     "widget": {
+      "name": "chat_handler"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "n_ctx",
+     "name": "n_ctx",
+     "type": "INT",
+     "widget": {
+      "name": "n_ctx"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "vram_limit",
+     "name": "vram_limit",
+     "type": "INT",
+     "widget": {
+      "name": "vram_limit"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "n_cpu_moe",
+     "name": "n_cpu_moe",
+     "type": "INT",
+     "widget": {
+      "name": "n_cpu_moe"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "llm_enabled",
+     "name": "llm_enabled",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "llm_enabled"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "capture_mode",
+     "name": "capture_mode",
+     "type": "COMBO",
+     "widget": {
+      "name": "capture_mode"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "nsfw",
+     "name": "nsfw",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "nsfw"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "system_preset",
+     "name": "system_preset",
+     "type": "COMBO",
+     "widget": {
+      "name": "system_preset"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "instruction_preset",
+     "name": "instruction_preset",
+     "type": "COMBO",
+     "widget": {
+      "name": "instruction_preset"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "camera_rig",
+     "name": "camera_rig",
+     "type": "COMBO",
+     "widget": {
+      "name": "camera_rig"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "shot_size",
+     "name": "shot_size",
+     "type": "COMBO",
+     "widget": {
+      "name": "shot_size"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "angle",
+     "name": "angle",
+     "type": "COMBO",
+     "widget": {
+      "name": "angle"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "lens",
+     "name": "lens",
+     "type": "COMBO",
+     "widget": {
+      "name": "lens"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "pose",
+     "name": "pose",
+     "type": "COMBO",
+     "widget": {
+      "name": "pose"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "wardrobe",
+     "name": "wardrobe",
+     "type": "COMBO",
+     "widget": {
+      "name": "wardrobe"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "brief",
+     "name": "brief",
+     "type": "STRING",
+     "widget": {
+      "name": "brief"
+     },
+     "link": 6
+    },
+    {
+     "localized_name": "scene",
+     "name": "scene",
+     "type": "STRING",
+     "widget": {
+      "name": "scene"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "light",
+     "name": "light",
+     "type": "STRING",
+     "widget": {
+      "name": "light"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "action",
+     "name": "action",
+     "type": "STRING",
+     "widget": {
+      "name": "action"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "system_prompt",
+     "name": "system_prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "system_prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "instruction",
+     "name": "instruction",
+     "type": "STRING",
+     "widget": {
+      "name": "instruction"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "final_prompt",
+     "name": "final_prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "final_prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "negative",
+     "name": "negative",
+     "type": "STRING",
+     "widget": {
+      "name": "negative"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "prefix",
+     "name": "prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "prefix"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "suffix",
+     "name": "suffix",
+     "type": "STRING",
+     "widget": {
+      "name": "suffix"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "seed",
+     "name": "seed",
+     "type": "INT",
+     "widget": {
+      "name": "seed"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "force_offload",
+     "name": "force_offload",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "force_offload"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "max_tokens",
+     "name": "max_tokens",
+     "type": "INT",
+     "widget": {
+      "name": "max_tokens"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "temperature",
+     "name": "temperature",
+     "type": "FLOAT",
+     "widget": {
+      "name": "temperature"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "top_k",
+     "name": "top_k",
+     "type": "INT",
+     "widget": {
+      "name": "top_k"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "top_p",
+     "name": "top_p",
+     "type": "FLOAT",
+     "widget": {
+      "name": "top_p"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "min_p",
+     "name": "min_p",
+     "type": "FLOAT",
+     "widget": {
+      "name": "min_p"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "typical_p",
+     "name": "typical_p",
+     "type": "FLOAT",
+     "widget": {
+      "name": "typical_p"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "repeat_penalty",
+     "name": "repeat_penalty",
+     "type": "FLOAT",
+     "widget": {
+      "name": "repeat_penalty"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "frequency_penalty",
+     "name": "frequency_penalty",
+     "type": "FLOAT",
+     "widget": {
+      "name": "frequency_penalty"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "mirostat_mode",
+     "name": "mirostat_mode",
+     "type": "INT",
+     "widget": {
+      "name": "mirostat_mode"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "mirostat_tau",
+     "name": "mirostat_tau",
+     "type": "FLOAT",
+     "widget": {
+      "name": "mirostat_tau"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "mirostat_eta",
+     "name": "mirostat_eta",
+     "type": "FLOAT",
+     "widget": {
+      "name": "mirostat_eta"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "type_k",
+     "name": "type_k",
+     "type": "COMBO",
+     "widget": {
+      "name": "type_k"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "type_v",
+     "name": "type_v",
+     "type": "COMBO",
+     "widget": {
+      "name": "type_v"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "max_size",
+     "name": "max_size",
+     "type": "INT",
+     "widget": {
+      "name": "max_size"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "image_min_tokens",
+     "name": "image_min_tokens",
+     "type": "INT",
+     "widget": {
+      "name": "image_min_tokens"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "image_max_tokens",
+     "name": "image_max_tokens",
+     "type": "INT",
+     "widget": {
+      "name": "image_max_tokens"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "mtp_speculative",
+     "name": "mtp_speculative",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "mtp_speculative"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "mtp_draft_max",
+     "name": "mtp_draft_max",
+     "type": "INT",
+     "widget": {
+      "name": "mtp_draft_max"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "ref_preset",
+     "name": "ref_preset",
+     "type": "COMBO",
+     "widget": {
+      "name": "ref_preset"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "ref_description",
+     "name": "ref_description",
+     "type": "STRING",
+     "widget": {
+      "name": "ref_description"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "refresh_ref",
+     "name": "refresh_ref",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "refresh_ref"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "persona_image",
+     "name": "persona_image",
+     "type": "COMBO",
+     "widget": {
+      "name": "persona_image"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "refs_json",
+     "name": "refs_json",
+     "type": "STRING",
+     "widget": {
+      "name": "refs_json"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "primary_set",
+     "name": "primary_set",
+     "type": "INT",
+     "widget": {
+      "name": "primary_set"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "batch_mode",
+     "name": "batch_mode",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "batch_mode"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "batch_prompts",
+     "name": "batch_prompts",
+     "type": "STRING",
+     "widget": {
+      "name": "batch_prompts"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "ref_outputs",
+     "name": "ref_outputs",
+     "type": "INT",
+     "widget": {
+      "name": "ref_outputs"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "style",
+     "name": "style",
+     "type": "COMBO",
+     "widget": {
+      "name": "style"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "time_of_day",
+     "name": "time_of_day",
+     "type": "COMBO",
+     "widget": {
+      "name": "time_of_day"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "mood",
+     "name": "mood",
+     "type": "COMBO",
+     "widget": {
+      "name": "mood"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "aspect",
+     "name": "aspect",
+     "type": "COMBO",
+     "widget": {
+      "name": "aspect"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "props",
+     "name": "props",
+     "type": "STRING",
+     "widget": {
+      "name": "props"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "ref_mode",
+     "name": "ref_mode",
+     "type": "COMBO",
+     "widget": {
+      "name": "ref_mode"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "latent_mode",
+     "name": "latent_mode",
+     "type": "COMBO",
+     "widget": {
+      "name": "latent_mode"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "positive",
+     "name": "positive",
+     "type": "CONDITIONING",
+     "links": null
+    },
+    {
+     "localized_name": "negative",
+     "name": "negative",
+     "type": "CONDITIONING",
+     "links": null
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "links": [
+      11
+     ]
+    },
+    {
+     "localized_name": "prompt_list",
+     "name": "prompt_list",
+     "shape": 6,
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "localized_name": "positive_list",
+     "name": "positive_list",
+     "shape": 6,
+     "type": "CONDITIONING",
+     "links": null
+    },
+    {
+     "localized_name": "clip",
+     "name": "clip",
+     "type": "CLIP",
+     "links": null
+    },
+    {
+     "label": "refs out",
+     "localized_name": "refs",
+     "name": "refs",
+     "type": "*",
+     "links": null
+    },
+    {
+     "localized_name": "queue",
+     "name": "queue",
+     "type": "*",
+     "links": null
+    },
+    {
+     "localized_name": "latent",
+     "name": "latent",
+     "type": "LATENT",
+     "links": null
+    }
+   ],
+   "title": "2. Prompter: task preset BBox layout",
+   "properties": {
+    "cnr_id": "comfyui_fearnworksnodes",
+    "ver": "0.1.2",
+    "Node name for S&R": "ArtfatLLMPrompterV2",
+    "artfat_v2_ref_in_links": [
+     {
+      "source_id": 10,
+      "source_slot": 0
+     }
+    ]
+   },
+   "widgets_values": [
+    "your_vision_llm.gguf",
+    "your_vision_llm_mmproj.gguf",
+    "Qwen3.5 / 3.6 / 3.8 (no thinking)",
+    8192,
+    -1,
+    0,
+    true,
+    "composite",
+    false,
+    "Detailed_Generic.txt",
+    "BBox layout: whole frame with the [BOXES] (Artfat BBox Canvas)",
+    "(auto)",
+    "(auto)",
+    "(auto)",
+    "(auto)",
+    "(none)",
+    "(inherit)",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "The [IDEA] holds the user's idea and a [BOXES] list: numbered areas of the frame, each with its place and what must be inside it. Write ONE text-to-image prompt for the WHOLE frame as it must look in the end. If an image is given, it is the picture being edited: describe it as it will look AFTER the change - everything outside the listed areas exactly as the image shows it, and inside each area only the new content from the [BOXES] list. Never mention what an area shows now, and never write replace, change, instead, new, remove or add. If no image is given, build the scene from the [IDEA] so that every listed item sits naturally at its place. Name every listed item once, at its place in plain words (on the wall to the left, on the floor in the foreground), keeping the user's wording. For a text item write the exact words in double quotes and what they are printed on. An item marked character is the person: call them only 'the woman' (or 'the man') and never describe their look - no face, hair, skin, makeup, age or body build; the look comes from the LoRA. Never write area numbers, coordinates, percentages or the words box or [BOXES]. State every element once, with no contradictions. Output only the prompt as one flowing paragraph, no preamble.",
+    "A rainy neon night street market in a futuristic megacity, captured at eye level with the wide, slightly distorted perspective of a smartphone camera. The wet asphalt glistens under the heavy rain, mirroring the vibrant pink and teal hues of the surrounding holographic advertisements and storefronts. Thick clouds of white steam billow upward from various food stalls, swirling into the cold, misty air and softening the sharp edges of the background architecture. Suspended high above the central food stall in the upper frame is a glowing pink neon sign displaying the words \"NOVA NOODLES\" in bright, electric letters. To the right, a tall chrome robot cook with four articulated arms stands actively stirring a large steaming wok, its metallic surface reflecting the ambient city lights. In the bottom left foreground, a small orange cat wearing a clear plastic raincoat sits perched atop a wooden crate, its fur slightly damp and glistening. The scene is bathed in a mix of cool teal and warm pink light, creating a moody, atmospheric cyberpunk aesthetic with realistic water droplets on the lens and shallow depth of field blurring the distant skyscrapers.",
+    "",
+    "",
+    "",
+    53433643666976,
+    "randomize",
+    true,
+    512,
+    0.6,
+    40,
+    0.9,
+    0.05,
+    1,
+    1.05,
+    0,
+    0,
+    5,
+    0.1,
+    "f16",
+    "f16",
+    512,
+    0,
+    0,
+    false,
+    2,
+    "Face_Only_Identity_Im1.txt",
+    "",
+    false,
+    "(none)",
+    "[{\"wire\":\"10:0\",\"set\":1}]",
+    1,
+    false,
+    "",
+    0,
+    "(auto)",
+    "(auto)",
+    "(auto)",
+    "(auto)",
+    "",
+    "edit",
+    "edit",
+    ""
+   ],
+   "widgets_values_named": {
+    "model": "your_vision_llm.gguf",
+    "mmproj": "your_vision_llm_mmproj.gguf",
+    "chat_handler": "Qwen3.5 / 3.6 / 3.8 (no thinking)",
+    "n_ctx": 8192,
+    "vram_limit": -1,
+    "n_cpu_moe": 0,
+    "llm_enabled": true,
+    "capture_mode": "composite",
+    "nsfw": false,
+    "system_preset": "Detailed_Generic.txt",
+    "instruction_preset": "BBox layout: whole frame with the [BOXES] (Artfat BBox Canvas)",
+    "camera_rig": "(auto)",
+    "shot_size": "(auto)",
+    "angle": "(auto)",
+    "lens": "(auto)",
+    "pose": "(none)",
+    "wardrobe": "(inherit)",
+    "brief": "",
+    "scene": "",
+    "light": "",
+    "action": "",
+    "system_prompt": "",
+    "instruction": "The [IDEA] holds the user's idea and a [BOXES] list: numbered areas of the frame, each with its place and what must be inside it. Write ONE text-to-image prompt for the WHOLE frame as it must look in the end. If an image is given, it is the picture being edited: describe it as it will look AFTER the change - everything outside the listed areas exactly as the image shows it, and inside each area only the new content from the [BOXES] list. Never mention what an area shows now, and never write replace, change, instead, new, remove or add. If no image is given, build the scene from the [IDEA] so that every listed item sits naturally at its place. Name every listed item once, at its place in plain words (on the wall to the left, on the floor in the foreground), keeping the user's wording. For a text item write the exact words in double quotes and what they are printed on. An item marked character is the person: call them only 'the woman' (or 'the man') and never describe their look - no face, hair, skin, makeup, age or body build; the look comes from the LoRA. Never write area numbers, coordinates, percentages or the words box or [BOXES]. State every element once, with no contradictions. Output only the prompt as one flowing paragraph, no preamble.",
+    "final_prompt": "A rainy neon night street market in a futuristic megacity, captured at eye level with the wide, slightly distorted perspective of a smartphone camera. The wet asphalt glistens under the heavy rain, mirroring the vibrant pink and teal hues of the surrounding holographic advertisements and storefronts. Thick clouds of white steam billow upward from various food stalls, swirling into the cold, misty air and softening the sharp edges of the background architecture. Suspended high above the central food stall in the upper frame is a glowing pink neon sign displaying the words \"NOVA NOODLES\" in bright, electric letters. To the right, a tall chrome robot cook with four articulated arms stands actively stirring a large steaming wok, its metallic surface reflecting the ambient city lights. In the bottom left foreground, a small orange cat wearing a clear plastic raincoat sits perched atop a wooden crate, its fur slightly damp and glistening. The scene is bathed in a mix of cool teal and warm pink light, creating a moody, atmospheric cyberpunk aesthetic with realistic water droplets on the lens and shallow depth of field blurring the distant skyscrapers.",
+    "negative": "",
+    "prefix": "",
+    "suffix": "",
+    "seed": 53433643666976,
+    "control_after_generate": "randomize",
+    "force_offload": true,
+    "max_tokens": 512,
+    "temperature": 0.6,
+    "top_k": 40,
+    "top_p": 0.9,
+    "min_p": 0.05,
+    "typical_p": 1,
+    "repeat_penalty": 1.05,
+    "frequency_penalty": 0,
+    "mirostat_mode": 0,
+    "mirostat_tau": 5,
+    "mirostat_eta": 0.1,
+    "type_k": "f16",
+    "type_v": "f16",
+    "max_size": 512,
+    "image_min_tokens": 0,
+    "image_max_tokens": 0,
+    "mtp_speculative": false,
+    "mtp_draft_max": 2,
+    "ref_preset": "Face_Only_Identity_Im1.txt",
+    "ref_description": "",
+    "refresh_ref": false,
+    "persona_image": "(none)",
+    "refs_json": "[{\"wire\":\"10:0\",\"set\":1}]",
+    "primary_set": 1,
+    "batch_mode": false,
+    "batch_prompts": "",
+    "ref_outputs": 0,
+    "style": "(auto)",
+    "time_of_day": "(auto)",
+    "mood": "(auto)",
+    "aspect": "(auto)",
+    "props": "",
+    "ref_mode": "edit",
+    "latent_mode": "edit",
+    "alp2_ui": ""
+   },
+   "color": "#26262e",
+   "bgcolor": "#1e1e24"
+  },
+  {
+   "id": 12,
+   "type": "ArtfatBBoxSampler",
+   "pos": [
+    1560,
+    0
+   ],
+   "size": [
+    400,
+    444
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "model",
+     "name": "model",
+     "type": "MODEL",
+     "link": 8
+    },
+    {
+     "localized_name": "clip",
+     "name": "clip",
+     "type": "CLIP",
+     "link": 9
+    },
+    {
+     "localized_name": "vae",
+     "name": "vae",
+     "type": "VAE",
+     "link": 10
+    },
+    {
+     "localized_name": "layout",
+     "name": "layout",
+     "shape": 7,
+     "type": "ARRAY",
+     "link": 12
+    },
+    {
+     "localized_name": "image",
+     "name": "image",
+     "shape": 7,
+     "type": "IMAGE",
+     "link": 13
+    },
+    {
+     "localized_name": "mask",
+     "name": "mask",
+     "shape": 7,
+     "type": "MASK",
+     "link": 14
+    },
+    {
+     "localized_name": "positive",
+     "name": "positive",
+     "shape": 7,
+     "type": "CONDITIONING",
+     "link": null
+    },
+    {
+     "localized_name": "negative",
+     "name": "negative",
+     "shape": 7,
+     "type": "CONDITIONING",
+     "link": null
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": 11
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "widget": {
+      "name": "width"
+     },
+     "link": 15
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "widget": {
+      "name": "height"
+     },
+     "link": 16
+    },
+    {
+     "localized_name": "seed",
+     "name": "seed",
+     "type": "INT",
+     "widget": {
+      "name": "seed"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "steps",
+     "name": "steps",
+     "type": "INT",
+     "widget": {
+      "name": "steps"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "cfg",
+     "name": "cfg",
+     "type": "FLOAT",
+     "widget": {
+      "name": "cfg"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "sampler_name",
+     "name": "sampler_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "sampler_name"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "scheduler",
+     "name": "scheduler",
+     "type": "COMBO",
+     "widget": {
+      "name": "scheduler"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "start_step",
+     "name": "start_step",
+     "type": "INT",
+     "widget": {
+      "name": "start_step"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "ИЗОБРАЖЕНИЕ",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      17
+     ]
+    },
+    {
+     "localized_name": "ЛАТЕНТНЫЙ",
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": null
+    },
+    {
+     "localized_name": "layout_prompt",
+     "name": "layout_prompt",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "title": "3. BBox Sampler (edit = only the boxes are redrawn)",
+   "properties": {
+    "cnr_id": "comfyui_fearnworksnodes",
+    "ver": "0.1.2",
+    "Node name for S&R": "ArtfatBBoxSampler"
+   },
+   "widgets_values": [
+    "",
+    1152,
+    2048,
+    202545766766791,
+    "randomize",
+    8,
+    1,
+    "res_6s",
+    "bong_tangent",
+    0
+   ],
+   "widgets_values_named": {
+    "prompt": "",
+    "width": 1152,
+    "height": 2048,
+    "seed": 202545766766791,
+    "control_after_generate": "randomize",
+    "steps": 8,
+    "cfg": 1,
+    "sampler_name": "res_6s",
+    "scheduler": "bong_tangent",
+    "start_step": 0
+   }
+  },
+  {
+   "id": 13,
+   "type": "SaveImage",
+   "pos": [
+    1960,
+    0
+   ],
+   "size": [
+    420,
+    760
+   ],
+   "flags": {},
+   "order": 11,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "изображения",
+     "name": "images",
+     "type": "IMAGE",
+     "link": 17
+    },
+    {
+     "localized_name": "префикс_названия_файла",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "изображения",
+     "name": "images",
+     "type": "IMAGE",
+     "links": null
+    }
+   ],
+   "title": "Result",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.41.0",
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "bbox"
+   ],
+   "widgets_values_named": {
+    "filename_prefix": "bbox"
+   }
+  },
+  {
+   "id": 14,
+   "type": "PreviewImage",
+   "pos": [
+    1960,
+    800
+   ],
+   "size": [
+    289.68515625,
+    26
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "изображения",
+     "name": "images",
+     "type": "IMAGE",
+     "link": 18
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "изображения",
+     "name": "images",
+     "type": "IMAGE",
+     "links": null
+    }
+   ],
+   "title": "Boxes preview",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.41.0",
+    "Node name for S&R": "PreviewImage"
+   }
+  },
+  {
+   "id": 15,
+   "type": "Note",
+   "pos": [
+    380,
+    -260
+   ],
+   "size": [
+    1000,
+    220
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "properties": {},
+   "widgets_values": [
+    "HOW IT WORKS\nEDIT a picture: Load Image ON. Draw boxes over the parts to change; in each box write what must be there (text box = the exact words). Only the boxes are redrawn, everything else stays pixel-identical.\nGENERATE: bypass Load Image (Ctrl+B). Set width/height on the canvas, draw where each thing goes.\nbrief = your idea for the whole frame. The canvas sends brief + the box list to the prompter, the prompter writes the full prompt, the sampler draws it.\nPrompter OFF (llm_enabled = false): type the whole prompt yourself into the prompter's final_prompt - in edit mode describe the frame AFTER the change.\ncharacter_boxes: numbers of boxes that hold your LoRA character (e.g. 2) - the prompter will not describe their look.\nSeam visible? raise feather. New thing too weak? keep start_step 0."
+   ],
+   "widgets_values_named": {
+    "text": "HOW IT WORKS\nEDIT a picture: Load Image ON. Draw boxes over the parts to change; in each box write what must be there (text box = the exact words). Only the boxes are redrawn, everything else stays pixel-identical.\nGENERATE: bypass Load Image (Ctrl+B). Set width/height on the canvas, draw where each thing goes.\nbrief = your idea for the whole frame. The canvas sends brief + the box list to the prompter, the prompter writes the full prompt, the sampler draws it.\nPrompter OFF (llm_enabled = false): type the whole prompt yourself into the prompter's final_prompt - in edit mode describe the frame AFTER the change.\ncharacter_boxes: numbers of boxes that hold your LoRA character (e.g. 2) - the prompter will not describe their look.\nSeam visible? raise feather. New thing too weak? keep start_step 0."
+   },
+   "color": "#432",
+   "bgcolor": "#653"
+  }
+ ],
+ "links": [
+  [
+   1,
+   4,
+   0,
+   7,
+   0,
+   "MODEL"
+  ],
+  [
+   2,
+   5,
+   0,
+   7,
+   1,
+   "CLIP"
+  ],
+  [
+   3,
+   7,
+   0,
+   8,
+   0,
+   "MODEL"
+  ],
+  [
+   4,
+   7,
+   1,
+   8,
+   1,
+   "CLIP"
+  ],
+  [
+   6,
+   10,
+   2,
+   11,
+   22,
+   "STRING"
+  ],
+  [
+   8,
+   8,
+   0,
+   12,
+   0,
+   "MODEL"
+  ],
+  [
+   9,
+   8,
+   1,
+   12,
+   1,
+   "CLIP"
+  ],
+  [
+   10,
+   6,
+   0,
+   12,
+   2,
+   "VAE"
+  ],
+  [
+   11,
+   11,
+   2,
+   12,
+   8,
+   "STRING"
+  ],
+  [
+   12,
+   10,
+   3,
+   12,
+   3,
+   "ARRAY"
+  ],
+  [
+   13,
+   10,
+   0,
+   12,
+   4,
+   "IMAGE"
+  ],
+  [
+   14,
+   10,
+   1,
+   12,
+   5,
+   "MASK"
+  ],
+  [
+   15,
+   10,
+   4,
+   12,
+   9,
+   "INT"
+  ],
+  [
+   16,
+   10,
+   5,
+   12,
+   10,
+   "INT"
+  ],
+  [
+   17,
+   12,
+   0,
+   13,
+   0,
+   "IMAGE"
+  ],
+  [
+   18,
+   10,
+   6,
+   14,
+   0,
+   "IMAGE"
+  ],
+  [
+   19,
+   9,
+   0,
+   10,
+   0,
+   "IMAGE"
+  ]
+ ],
+ "groups": [],
+ "config": {},
+ "version": 0.4,
+ "extra": {}
+}
