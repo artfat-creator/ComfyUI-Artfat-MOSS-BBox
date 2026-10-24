@@ -121,6 +121,10 @@ class ArtfatBBoxCanvas(io.ComfyNode):
                                      "it sets the size (width x height pixels), the picture keeps its own proportions."),
                 io.Int.Input("res_height", display_name="res height", optional=True, force_input=True, min=64, max=16384,
                              tooltip="Optional, from Artfat Resolution. Generate: the frame height. Edit: see res width."),
+                # Last again, for the same reason. The switch sits in the canvas toolbar (artfat_bbox.js).
+                io.Boolean.Input("bbox_mode", default=True, optional=True, label_on="bbox generation", label_off="simple generation",
+                                 tooltip="ON: the boxes, the picture and this brief are used. OFF: a plain new frame -- "
+                                         "boxes, picture and brief are left out, the prompter writes from its own brief."),
             ],
             outputs=[
                 io.Image.Output(display_name="image"),
@@ -139,13 +143,15 @@ class ArtfatBBoxCanvas(io.ComfyNode):
     @classmethod
     def execute(cls, width, height, editor_state=None, last_incoming=None, background=None, bboxes=None,
                 brief="", character_boxes="", megapixels=2.0, grow=16, feather=64,
-                res_width=None, res_height=None) -> io.NodeOutput:
+                res_width=None, res_height=None, bbox_mode=True) -> io.NodeOutput:
         # Same source rule as core Create Bounding Boxes: a new upstream value wins once, canvas edits after that.
         # Boxes are in canvas pixels (width x height), so the fractions come from the canvas size.
         incoming = cbb.boxes_from_input(bboxes, width, height)
         applied = last_incoming if isinstance(last_incoming, list) else []
         source = incoming if (incoming and incoming != applied) else (editor_state or [])
         regions = cbb.boxes_to_regions(source, width, height)  # fractions of the canvas
+        if not bbox_mode:  # simple generation: nothing from the canvas reaches the prompter or the sampler
+            regions, background, brief = [], None, ""
 
         # res width/height wired: generate = exactly that frame; edit = that many pixels, picture's proportions.
         sized = bool(res_width and res_height)

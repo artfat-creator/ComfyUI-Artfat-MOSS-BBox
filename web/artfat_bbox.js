@@ -60,6 +60,53 @@ function watchPhoto(node) {
     };
 }
 
+// bbox generation / simple generation: a button in the canvas toolbar, next to Grid, drives the
+// hidden `bbox_mode` widget. The toolbar belongs to the core canvas widget (Nodes 2.0) and Vue may
+// re-render it, so the button is re-attached whenever it goes missing.
+function modeSwitch(node) {
+    const widget = node.widgets?.find((w) => w.name === "bbox_mode");
+    if (!widget) return;
+    widget.hidden = true;
+    let btn = null;
+    let hint = null;
+    const paint = () => {
+        const on = widget.value !== false;
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+        btn.querySelector("span").textContent = on ? "bbox generation" : "simple generation";
+        btn.title = on ? "ON: boxes, picture and brief are used. Click for simple generation."
+                       : "OFF: a plain new frame, the canvas is left out. Click for bbox generation.";
+        const pane = btn.closest(".flex-col")?.lastElementChild;
+        if (pane && pane !== btn.parentElement) pane.style.opacity = on ? "" : "0.35";
+    };
+    const timer = setInterval(() => {
+        if (!node.graph) return;
+        const grid = document.querySelector(`[data-node-id="${node.id}"] .h-9 > button[aria-pressed]`);
+        if (!grid) return;
+        if (!btn || !btn.isConnected) {
+            btn = grid.cloneNode(false);
+            btn.dataset.artfatMode = "1";
+            btn.appendChild(document.createElement("span"));
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                widget.value = widget.value === false;
+                widget.callback?.(widget.value);
+                node.setDirtyCanvas?.(true, true);
+                paint();
+            });
+            hint = document.createElement("span");
+            hint.textContent = "← click to switch the generation mode";
+            hint.style.cssText = "font-size:11px;opacity:.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;";
+            grid.after(btn, hint);
+        }
+        paint();
+    }, 500);
+    const onRemoved = node.onRemoved;
+    node.onRemoved = function () {
+        clearInterval(timer);
+        return onRemoved?.apply(this, arguments);
+    };
+}
+
 // The core widget only resizes and hides `last_incoming` for its own CreateBoundingBoxes node,
 // so the Artfat canvas does the same here.
 app.registerExtension({
@@ -90,5 +137,6 @@ app.registerExtension({
         for (const widget of node.widgets ?? []) {
             if (widget.name === "last_incoming") widget.hidden = true;
         }
+        modeSwitch(node);
     },
 });
