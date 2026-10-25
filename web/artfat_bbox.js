@@ -60,6 +60,28 @@ function watchPhoto(node) {
     };
 }
 
+// The core canvas sizes itself to the picture's aspect, so the node grew and shrank with every
+// picture. Keep a fixed 3:4 frame instead (the node can still be resized, the frame follows its
+// width) and fit the canvas inside it. The canvas keeps its own aspect, and the core widget maps
+// the pointer from its on-screen box, so the boxes stay where they are drawn.
+const FRAME = 4 / 3; // height / width
+function fitCanvas(node) {
+    const canvas = document.querySelector(`[data-node-id="${node.id}"] div[style*="aspect-ratio"]`);
+    const frame = canvas?.parentElement;
+    if (!frame) return;
+    const [w, h] = canvas.style.aspectRatio.split("/").map(Number);
+    if (!w || !h) return;
+    const width = frame.clientWidth;
+    const height = Math.round(width * FRAME);
+    const bar = frame.firstElementChild === canvas ? 0 : frame.firstElementChild.offsetHeight;
+    const fitted = `${Math.round(Math.min(width, height * (w / h)))}px`;
+    if (canvas.style.width !== fitted) canvas.style.width = fitted;
+    canvas.style.alignSelf = "center";
+    canvas.style.margin = "auto 0";
+    const total = `${bar + height}px`;
+    if (frame.style.height !== total) frame.style.height = total;
+}
+
 // bbox generation / simple generation: a button in the canvas toolbar, next to Grid, drives the
 // hidden `bbox_mode` widget. The toolbar belongs to the core canvas widget (Nodes 2.0) and Vue may
 // re-render it, so the button is re-attached whenever it goes missing.
@@ -73,6 +95,10 @@ function modeSwitch(node) {
         const on = widget.value !== false;
         btn.setAttribute("aria-pressed", on ? "true" : "false");
         btn.querySelector("span").textContent = on ? "bbox generation" : "simple generation";
+        // Stands out by brightness and weight too, not by hue alone.
+        btn.style.background = on ? "#d32f2f" : "#4a4a4a";
+        btn.style.color = "#ffffff";
+        btn.style.fontWeight = "700";
         btn.title = on ? "ON: boxes, picture and brief are used. Click for simple generation."
                        : "OFF: a plain new frame, the canvas is left out. Click for bbox generation.";
         const pane = btn.closest(".flex-col")?.lastElementChild;
@@ -80,6 +106,7 @@ function modeSwitch(node) {
     };
     const timer = setInterval(() => {
         if (!node.graph) return;
+        fitCanvas(node);
         const grid = document.querySelector(`[data-node-id="${node.id}"] .h-9 > button[aria-pressed]`);
         if (!grid) return;
         if (!btn || !btn.isConnected) {

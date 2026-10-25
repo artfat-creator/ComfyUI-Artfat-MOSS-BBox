@@ -46,7 +46,7 @@ The canvas tells the prompter what the boxes must hold, the prompter writes the 
 
 ## Install
 
-Not in the ComfyUI Manager list yet. ComfyUI Manager → **Install via Git URL** → paste `https://github.com/artfat-creator/ComfyUI-Artfat-MOSS-BBox`. Or:
+ComfyUI Manager → Custom Nodes → search **Artfat** → **Artfat MOSS BBox** → Install. If the search does not find it: ComfyUI Manager → **Install via Git URL** → `https://github.com/artfat-creator/ComfyUI-Artfat-MOSS-BBox`. Or:
 
 ```
 cd ComfyUI/custom_nodes
