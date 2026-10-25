@@ -34,12 +34,27 @@ function photoFor(node) {
     return { filename: value.slice(cut + 1), subfolder: cut >= 0 ? value.slice(0, cut) : "", type: "input" };
 }
 
+// Workflows saved before 1.2.2 store the old on/off switch (`edit_last_result`) in this slot.
+// ON was "edit last result"; OFF read the Load Image, which was a photo unless it was bypassed.
+function migrateSource(node) {
+    const onConfigure = node.onConfigure;
+    node.onConfigure = function () {
+        const r = onConfigure?.apply(this, arguments);
+        const widget = this.widgets?.find((w) => w.name === "source");
+        if (widget && typeof widget.value === "boolean") {
+            widget.value = widget.value ? "edit last result" : (photoFor(this) ? "my photo" : "new image");
+        }
+        return r;
+    };
+}
+
 function watchPhoto(node) {
     let last = "";
     const timer = setInterval(() => {
         if (!node.graph) return;
-        if (node.widgets?.find((w) => w.name === "edit_last_result")?.value) {
-            // Drop the photo preview we set, so the photo does not pose as the last result.
+        if (node.widgets?.find((w) => w.name === "source")?.value !== "my photo") {
+            // Only `my photo` reads the Load Image; drop the photo preview we set otherwise,
+            // so the photo does not pose as the new frame or the last result.
             if (last && last !== "-") nodeOutputStore()?.removeNodeOutputsForNode?.(node);
             last = "";
             return;
@@ -157,7 +172,10 @@ app.registerExtension({
         };
     },
     nodeCreated(node) {
-        if (node.constructor.comfyClass === "ArtfatEditSource") watchPhoto(node);
+        if (node.constructor.comfyClass === "ArtfatEditSource") {
+            migrateSource(node);
+            watchPhoto(node);
+        }
         if (node.constructor.comfyClass !== "ArtfatBBoxCanvas") return;
         const [w, h] = node.size;
         node.setSize([Math.max(w, 460), Math.max(h, 760)]);

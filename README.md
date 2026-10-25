@@ -114,7 +114,15 @@ Builds the MOSS layout prompt from your prompt + the boxes, samples and, in edit
 | `layout_prompt` | The exact text the model received (layout JSON). |
 
 ### Artfat Edit Source
-Put it in front of the canvas `image` input, with your Load Image wired into it. `edit last result` OFF: your photo goes to the canvas (Load Image bypassed = generate a new frame). ON: the frame the BBox Sampler drew last comes back into the canvas, so you can box and edit what you just generated. See *Edit what you just generated* below.
+Put it in front of the canvas `image` input, with your Load Image wired into it. One switch, `source`:
+
+| `source` | What goes to the canvas |
+|---|---|
+| `new image` (default) | nothing: a new frame is generated. The Load Image is not read. |
+| `my photo` | the picture from your Load Image, to edit it with boxes. |
+| `edit last result` | the frame the BBox Sampler drew last, to box and edit what you just generated. See *Edit what you just generated* below. |
+
+The Load Image must still point at a file that exists (ComfyUI checks it before every run), so the example workflow uses `example.png`, which ships with ComfyUI. Workflows saved before 1.2.2 are converted on load: the old switch ON becomes `edit last result`, OFF becomes `my photo` (or `new image` when the Load Image was bypassed).
 
 ### Artfat Frame Hold
 `hold` OFF: passes the generated frame through and remembers it. `hold` ON: returns the remembered frame and skips the generation. See *Generate, then edit the same frame* below.
@@ -142,8 +150,8 @@ Depth wins over boxes where they disagree. Lettering in the depth source shows u
 
 A wire from the sampler back into the canvas would be a loop, so the BBox Sampler remembers every frame it draws and **Artfat Edit Source** hands it back to the canvas.
 
-1. `edit last result` OFF, Load Image bypassed: generate as usual.
-2. Switch `edit last result` ON and run once with no boxes - the picture goes through untouched (about a second) and shows under the canvas.
+1. `source` = `new image`: generate as usual.
+2. Set `source` to `edit last result` and run once with no boxes - the picture goes through untouched (about a second) and shows under the canvas.
 3. Draw boxes over what to change and run. Only the boxes are redrawn; every next run edits the newest result.
 
 With the Artfat LLM Prompter use the task preset **User prompt -> edit**: it keeps your own prompt word for word and changes only what the boxes list (no boxes = the prompt is passed on and the LLM is not called). A prompt that still names the old object pulls it back into the box.
