@@ -40,7 +40,7 @@ The canvas tells the prompter what the boxes must hold, the prompter writes the 
 - **ComfyUI v0.42.0 or newer** (MOSS-Image support; the box canvas itself is in ComfyUI since v0.27.0). On an older ComfyUI the pack loads empty and prints one line asking you to update.
 - **Nodes 2.0 turned on**: Settings → **Modern Node Design (Nodes 2.0)**. The box canvas is a Nodes 2.0 widget; with the classic node design it shows only "Bounding Boxes: Node 2.0 only".
 - A MOSS-Image model (SFT or Base), the `moss_image` text encoder and the Flux 2 VAE, loaded with the standard ComfyUI loaders.
-- **[RES4LYF](https://github.com/ClownsharkBatwing/RES4LYF)** for the sampler `res_6s` and scheduler `bong_tangent` the defaults are tuned for. Without it the sampler falls back to `euler` / `simple`, but the example workflow is saved with `res_6s` and stops with *"Value not in list"* until RES4LYF is installed (ComfyUI Manager → search **RES4LYF**).
+- **[RES4LYF](https://github.com/ClownsharkBatwing/RES4LYF)** for the sampler `res_6s` and scheduler `bong_tangent` the defaults are tuned for. Without it the sampler falls back to `euler` / `simple`, but the example workflow is saved with `res_6s` and stops with *"Value not in list"* until RES4LYF is installed (ComfyUI Manager → search **RES4LYF**). After a manual `git clone`, also run `pip install -r requirements.txt` in the RES4LYF folder with ComfyUI's Python (it needs PyWavelets).
 - Optional: [Artfat LLM Prompter v2](https://github.com/artfat-creator/artfat-comfyui-llm-prompter-v2) for automatic prompts (task preset **BBox layout: whole frame with the [BOXES]**).
 - Optional, for depth control: ComfyUI v0.42.2+ (`MOSS-Image Color/Depth Control`).
 
